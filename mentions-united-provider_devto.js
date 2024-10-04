@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interaction from DevTo
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://developers.forem.com/api/v1
@@ -37,7 +37,9 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
     if (this.options.sourceUrl.length === 0) { throw "'sourceUrl' is missing"; }
 
     // get sourceId if not provided
-    if (this.options.sourceId === 0) { this.#getSourceId(); }
+    if (this.options.sourceId === 0) { 
+      this.#getSourceId(); 
+    }
   }
 
   /**
@@ -45,7 +47,7 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
    * @returns {Array.<MentionsUnited.Interaction>}
    */
   async retrieve() {
-    const msg = `${this.constructor.name}: Retreiving comments for ${this.options.sourceUrl}`;
+    const msg = `${this.constructor.name}: Retreiving comments for ${this.options.sourceUrl} (${this.options.sourceId})`;
     console.time(msg);
 
     const apiResponse = await fetch(this.commentApiUrl());
@@ -68,14 +70,16 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
    */
   #processJsonData(entries) {
     let items = [];
-    for (const entry of entries) {
-      let interaction = this.#convertToInteraction(entry);
-      items.push(interaction);
-      if (entry.children?.length > 0) {
-        let childItems = this.#processJsonData(entry.children);
-        items = items.concat(childItems);
-      }
-    };
+    try {
+      for (const entry of entries) {
+        let interaction = this.#convertToInteraction(entry);
+        items.push(interaction);
+        if (entry.children?.length > 0) {
+          let childItems = this.#processJsonData(entry.children);
+          items = items.concat(childItems);
+        }
+      };        
+    } catch (error) { console.warn(error); }
     return items;
   }
 
@@ -127,5 +131,6 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.0.1 - No data fix -> #processJsonData: entries not iterable
  */
