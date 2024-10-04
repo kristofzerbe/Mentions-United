@@ -174,7 +174,7 @@ mentionsUnited.register(new MentionsUnitedProvider_Webmentions({
 
 ### Pixelfed
 
-*File: [mentions-united-provider_pixelfed.js](https://github.com/kristofzerbe/Mentions-United/blob/mentions-united-provider_pixelfed.js)*  
+*File: [mentions-united-provider_pixelfed.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_pixelfed.js)*  
 *Version: 1.0.0*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
 
@@ -227,7 +227,7 @@ mentionsUnited.register(new MentionsUnitedProvider_Pixelfed({
 
 ### DEV.to
 
-*File: [mentions-united-provider_devto.js](https://github.com/kristofzerbe/Mentions-United/blob/mentions-united-provider_devto.js)*  
+*File: [mentions-united-provider_devto.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_devto.js)*  
 *Version: 1.0.0*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
 
@@ -285,7 +285,7 @@ The following Renderer plugins are currently available:
 
 ### Avatars By Type
 
-*File: [mentions-united-renderer_avatars-by-type.js](https://github.com/kristofzerbe/Mentions-United/blob/mentions-united-renderer_avatars-by-type.js)*  
+*File: [mentions-united-renderer_avatars-by-type.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_avatars-by-type.js)*  
 *Version: 1.0.0*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
 
@@ -318,7 +318,7 @@ This plugin creates an inline list of avatars of a specific interaction type. It
 
 ### List
 
-*File: [mentions-united-renderer_list.js](https://github.com/kristofzerbe/Mentions-United/blob/mentions-united-renderer_list.js)*  
+*File: [mentions-united-renderer_list.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_list.js)*  
 *Version: 1.0.0*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
 
@@ -362,7 +362,7 @@ The ``skipTypes`` option can be used to filter out unwanted interactions by type
 
 ### Total Number
 
-*File: [mentions-united-renderer_total-number.js](https://github.com/kristofzerbe/Mentions-United/blob/mentions-united-renderer_total-number.js)*  
+*File: [mentions-united-renderer_total-number.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_total-number.js)*  
 *Version: 1.0.1*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
 
@@ -454,3 +454,9 @@ mentionsUnited.load()
 
 ...
 ```
+
+## More Information
+
+Here you will find an introductory article that describes how **Mentions United** can be implemented under the SSG Hexo:
+
+[![Mentions United 3, 2, 1, Go](_attachments/Mentions-United-3-2-1-go.thumb.png)](https://kiko.io/post/Mentions-United-3-2-1-go/)
