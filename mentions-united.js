@@ -2,7 +2,7 @@
  * Mentions United main class
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * This script relies on two different types of plug-ins: PROVIDER and RENDERER, 
@@ -100,9 +100,11 @@ class MentionsUnited {
    * @param {MentionsUnited plugin class} plugin 
    */
   register(plugin) {
-    const { key } = plugin;
+    let { key } = plugin;
 
     if (plugin instanceof MentionsUnited.Provider) {
+      let pCount = this.helper.countAttributesByName(this.#providers, key);
+      if (pCount > 0) key += "_" + (pCount + 1);
       this.#providers[key] = plugin;
     }
 
@@ -256,6 +258,19 @@ class MentionsUnited {
     capitalize(value) {
       return (value && value[0].toUpperCase() + value.slice(1)) || "";
     }
+
+    /**
+     * Count attributes of given object by name which includes namePart
+     * @param {Object} obj 
+     * @param {String} namePart 
+     */
+    countAttributesByName(obj, namePart) {
+      let count = 0;
+      for(var name in obj) {
+        if (name.includes(namePart)) count += 1;
+      }
+      return count;
+    }
    
   }
 
@@ -263,5 +278,7 @@ class MentionsUnited {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.0.1 - new helper 'countAttributesByName' for making keys unique in constructor, 
+ *         when Provider plugin is registered multiple times with different URL's
  */

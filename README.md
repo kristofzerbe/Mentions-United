@@ -106,7 +106,7 @@ The implementation of a Provider plugin is a class which extends from ``Mentions
 |                              | Type          | Description                                              |
 | ---------------------------- | ------------- | -------------------------------------------------------- |
 | **key = "";**                | Public Field  | Unique key across all renderer plugins for registration  |
-| **options = {};**            | Public Field  | Pptions for the plugin                                   |
+| **options = {};**            | Public Field  | Options for the plugin                                   |
 | **constructor(options) {};** | Constructor   | Constructor that takes the needed options                |
 | **async retrieve() {};**     | Public Method | Async main method to retrieve interactions from provider |
 
