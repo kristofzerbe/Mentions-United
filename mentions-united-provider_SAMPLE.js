@@ -21,7 +21,7 @@
  *  - the fields 'key', 'options' and the async method 'retrieve' are mandatory
  *  - 'options' should be defined as used afterwards during initialisation of the calling code
  */
-class MentionsUnited_NAME extends MentionsUnited.Provider {
+class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
   key = "__PROVIDER__"; // must be unique across all provider plugins for registration
   
   options = {
@@ -86,7 +86,6 @@ class MentionsUnited_NAME extends MentionsUnited.Provider {
     r.source.sender = this.key;
     // r.source.url = entry...;
     // r.source.id = entry...;
-    // r.source.title = entry...
 
     // r.author.name = entry...;
     // r.author.avatar = entry...;
