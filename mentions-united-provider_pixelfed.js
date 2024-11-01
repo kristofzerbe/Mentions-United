@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interactions from Pixelfed
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: There is no proper API documentation, but the source code is freely available at: 
@@ -10,6 +10,7 @@
  * 
  * Options:
  *  - {String} sourceUrl          = Full URL of the mentioning page on Pixelfed
+ *  - {String} sourceTitle        = Title of the post on Pixelfed, if multiple
  *  - {String} [apiBaseUrl]       = Base URL of API proxy, if existing
  *  - {String} [apiTokenReadOnly] = Token to access Pixelfed's API in Read-Only mode, if no proxy
  * 
@@ -42,6 +43,7 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
   
   options = {
     sourceUrl: "",
+    sourceTitle: "",
     apiBaseUrl: "",
     apiTokenReadOnly: ""
   }
@@ -140,6 +142,7 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
     r.source.sender = this.key;
     r.source.url = this.options.sourceUrl;
     r.source.id = entry.id;
+    r.source.title = this.options.sourceTitle;
 
     r.author.name = (type === "reply") ? entry.account.display_name : entry.display_name;
     r.author.avatar = (type === "reply") ? entry.account.avatar : entry.avatar;
@@ -154,5 +157,6 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.0.1 - Introduction of 'sourceTitle', to be able to distinguish several Pixelfed sources textually
  */

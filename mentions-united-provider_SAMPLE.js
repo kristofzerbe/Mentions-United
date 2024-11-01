@@ -86,6 +86,7 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
     r.source.sender = this.key;
     // r.source.url = entry...;
     // r.source.id = entry...;
+    // r.source.title = entry...;
 
     // r.author.name = entry...;
     // r.author.avatar = entry...;

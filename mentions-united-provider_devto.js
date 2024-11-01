@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interaction from DevTo
  * 
  * @author Kristof Zerbe
- * @version 1.0.1
+ * @version 1.0.2
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://developers.forem.com/api/v1
@@ -99,6 +99,7 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
     r.source.sender = this.key;
     r.source.url = this.options.sourceUrl;
     r.source.id = this.sourceId;
+    r.source.title = "";
 
     r.author.name = entry.user.name;
     r.author.avatar = entry.user.profile_image_90;
@@ -133,4 +134,5 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
  * 
  * 1.0.0 - Initial
  * 1.0.1 - No data fix -> #processJsonData: entries not iterable
+ * 1.0.2 - Set source.title explicit to empty
  */

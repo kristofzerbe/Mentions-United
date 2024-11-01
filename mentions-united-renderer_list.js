@@ -2,7 +2,7 @@
  * Mentions United Renderer plugin for displaying Interactions as a list
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -146,9 +146,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
       
       let parts = {};
       parts.received = this.#part_received(ia);
-      parts.source = (ia.source.origin === "web") 
-        ? this.#part_origin_title(ia) 
-        : this.#part_origin(ia);
+      parts.source = this.#part_origin(ia);
       parts.content = (ia.content.html) 
         ? this.#part_content_html(ia) 
         : this.#part_content_text(ia);
@@ -166,9 +164,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
 
       let parts = {};
       parts.received = this.#part_received(ia);
-      parts.source = (ia.source.origin === "web") 
-        ? this.#part_origin_title(ia) 
-        : this.#part_origin(ia);
+      parts.source = this.#part_origin(ia);
       parts.content = (ia.content.html) 
         ? this.#part_content_html(ia) 
         : this.#part_content_text(ia);
@@ -186,9 +182,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
 
       let parts = {};
       parts.received = this.#part_received(ia);
-      parts.source = (ia.source.origin === "web") 
-        ? this.#part_origin_title(ia) 
-        : this.#part_origin(ia);
+      parts.source = this.#part_origin(ia);
       parts.content = (ia.content.text) 
         ? this.#part_content_text_excerpt(ia) 
         : "";
@@ -207,7 +201,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
       let parts = {};
       parts.received = this.#part_received(ia);
       parts.source = (ia.source.origin === "web") 
-        ? this.#part_origin_title(ia) 
+        ? this.#part_origin(ia) 
         : "";
 
       return this.#base(ia, parts);
@@ -327,33 +321,41 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
     }
 
     /**
-     * Template part for origin
+     * Template part for origin with or without title
      * @param {MentionsUnited.Interaction} ia 
      */
     #part_origin(ia) {
-      return this.helper.fillLiteralTemplate(
-        `
-        <span class="prep">on</span>
-        <a href="${ia.source.url}" class="origin">${this.helper.capitalize(ia.source.origin)}</a>
-        `,
-        ia
-      );
-    }
 
-    /**
-     * Template part for origin with post (title)
-     * @param {MentionsUnited.Interaction} ia 
-     */
-    #part_origin_title(ia) {
-      return this.helper.fillLiteralTemplate(
-        `
-        <span class="prep">in</span>
-        <a href="${ia.source.url}" class="title">${ia.source.title}</a>
-        <span class="prep">on</span>
-        <span class="origin">${ia.source.sender}</span>
-        `,
-        ia
-      );
+      if (ia.source.origin === "web") {
+        return this.helper.fillLiteralTemplate(
+          `
+          <span class="prep">in</span>
+          <a href="${ia.source.url}" class="title">${ia.source.title}</a>
+          <span class="prep">on</span>
+          <span class="origin">${ia.source.sender}</span>
+          `,
+          ia
+        );
+      } else {
+        if (ia.source.title && ia.source.title.length != 0) {
+          return this.helper.fillLiteralTemplate(
+            `
+            <span class="prep">on</span>
+            <a href="${ia.source.url}" class="origin">${this.helper.capitalize(ia.source.origin) + " (" + ia.source.title + ")"}</a>
+            `,
+            ia
+          );
+        } else {
+          return this.helper.fillLiteralTemplate(
+            `
+            <span class="prep">on</span>
+            <a href="${ia.source.url}" class="origin">${this.helper.capitalize(ia.source.origin)}</a>
+            `,
+            ia
+          );
+        }
+      }
+
     }
 
     /**
@@ -405,5 +407,6 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.0.1 - Refactored '#part_origin', including title depending on origin
  */
