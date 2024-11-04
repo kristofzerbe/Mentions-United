@@ -2,17 +2,17 @@
  * Mentions United Provider plugin class for retreiving webmentions from webmention.io
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 2.0.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://github.com/aaronpk/webmention.io
  * 
  * Options:
- *  - {String} targetUrl           = Full URL of the page mentioned (Permalink)
+ *  - {String} originalUrl         = Full URL of the original page mentioned (Permalink)
  *  - {Boolean} [tryResolveTitle]  = Should titles of mentioning pages be resolved
  * 
  * Supported origins:
- *  - web (native)
+ *  - webmention (native)
  *  - mastodon (via brid.gy)
  *  - bluesky (via bridgy)
  *  - flickr (via bridgy)
@@ -32,7 +32,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
   key = "webmention.io"; // must be unique across all provider plugins for registration
   
   options = {
-    targetUrl: "",
+    originalUrl: "",
     tryResolveTitle: false
   }
 
@@ -42,7 +42,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
     this.helper = new MentionsUnited.Helper();
 
     //check mandatory options
-    if (this.options.targetUrl.length === 0) { throw "'targetUrl' is missing"; }
+    if (this.options.originalUrl.length === 0) { throw "'originalUrl' is missing"; }
   }
 
   /**
@@ -50,7 +50,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
    * @returns {Array.<MentionsUnited.Interaction>}
    */
   async retrieve() {
-    const msg = `${this.constructor.name}: Retreiving webmentions for '${this.options.targetUrl}'`;
+    const msg = `${this.constructor.name}: Retreiving webmentions for '${this.options.originalUrl}'`;
     console.time(msg);
 
     const apiResponse = await fetch(this.webmentionApiUrl());
@@ -65,7 +65,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
       if (r.source.origin === "mastodon") { this.#resolveCustomEmojis(r); }
 
       //Resolve page title for webmentions from web pages, if wanted
-      if (r.source.origin === "web" && this.options.tryResolveTitle) { 
+      if (r.source.origin === "webmention" && this.options.tryResolveTitle) { 
         await this.#resolvePageTitle(r); 
       }
     };
@@ -76,7 +76,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
 
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  webmentionApiUrl() { return `https://webmention.io/api/mentions.jf2?target=${encodeURIComponent(this.options.targetUrl)}&per-page=1000&sort-dir=up`; };
+  webmentionApiUrl() { return `https://webmention.io/api/mentions.jf2?target=${encodeURIComponent(this.options.originalUrl)}&per-page=1000&sort-dir=up`; };
 
   /**
    * Processes retrieved JSON data into flat array of Interactions 
@@ -99,11 +99,14 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
 
     const sourceUrl = new URL(entry["wm-source"]);
 
+    r.syndication.url = "";
+    r.syndication.title = "";
+
     r.type = this.#translatePropertyVerb(entry["wm-property"]);
     r.received = entry["published"] ?? entry["wm-received"];
 
     r.source.provider = this.key;
-    r.source.origin = "web"; // default
+    r.source.origin = "webmention"; // default
     r.source.sender = sourceUrl.hostname;
     r.source.url = sourceUrl.href;
     r.source.id = entry["wm-id"];
@@ -215,5 +218,8 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 2.0.0 - Changed option name due to risk of confusion
+ *       - Changed source.origin default to 'webmention'
+ *       - Introducting interaction.syndication
  */

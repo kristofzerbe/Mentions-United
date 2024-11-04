@@ -1,5 +1,5 @@
 /**
- * Sample for a Mentions United Provider plugin class for retreiving interactions from __ORIGIN__
+ * Sample for a Mentions United Provider plugin class for retreiving interactions from __PROVIDER__
  * 
  * @author __YOUR-NAME__
  * @version 1.0.0
@@ -9,7 +9,8 @@
  * API Documentation: __URL__
  * 
  * Options:
- *  - {String} sourceUrl = for example an URL of the mentioning page on __ORIGIN__
+ *  - {String} syndicationUrl     = Full URL of the __PROVIDER__ post
+ *  - {String} syndicationTitle   = Title of the __PROVIDER__ post, if multiple syndications of original post
  * 
  * Supported origins:
  *  - __ORIGIN__
@@ -25,7 +26,8 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
   key = "__PROVIDER__"; // must be unique across all provider plugins for registration
   
   options = {
-    sourceUrl: ""
+    syndicationUrl: "",
+    syndicationTitle: ""
   }
 
   constructor(options) {
@@ -34,7 +36,7 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
     this.helper = new MentionsUnited.Helper(); // if needed
 
     //check mandatory options
-    if (this.options.sourceUrl.length === 0) { throw "'sourceUrl' is missing"; }
+    if (this.options.syndicationUrl.length === 0) { throw "'syndicationUrl' is missing"; }
   }
 
   /**
@@ -45,7 +47,7 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
    *  - be sure to set 'provider' to 'this.key' in every new instance of MentionsUnited.Interaction
    */
   async retrieve() {
-    const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.sourceUrl}'`;
+    const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
     console.time(msg);
     
     const apiResponse = await fetch("__URL__");
@@ -77,6 +79,9 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
    */
   #convertToInteraction(entry) {
     let r = new MentionsUnited.Interaction();
+
+    r.syndication.url = this.options.syndicationUrl;
+    r.syndication.title = this.options.syndicationTitle;
 
     // r.type = entry...;
     // r.received = entry...;

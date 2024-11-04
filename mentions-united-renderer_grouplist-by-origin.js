@@ -1,5 +1,5 @@
 /**
- * Mentions United Renderer plugin for displaying Interactions as a list
+ * Mentions United Renderer plugin for displaying Interactions as a grouped list by origin
  * 
  * @author Kristof Zerbe
  * @version 2.0.0
@@ -10,8 +10,8 @@
  *  - {String} [skipTypes]      = Comma-separated list of type-verbs to skip 
  *  - {Callback} [afterRender]  = Function to call after the generated HTML was inserted into the page
  */
-class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
-  key = "list"; // must be unique across all renderer plugins for registration
+class MentionsUnitedRenderer_GroupListByOrigin extends MentionsUnited.Renderer {
+  key = "grouplist-by-origin"; // must be unique across all renderer plugins for registration
 
   options = { 
     placeholderId: "",
@@ -45,27 +45,41 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
       });
     }
 
+    //build groups for origins with title from syndication, except for WEBMENTION
+    for (let ia of interactions) {
+      ia.source.group = this.helper.capitalize(ia.source.origin);
+      if (ia.source.origin.toLowerCase() != "webmention" && ia.syndication.title?.length > 0) {
+        ia.source.group += (" (" + ia.syndication.title + ")" );
+      } 
+    };
+
     const templates = new this.#Templates(this.helper);
 
-    let listElement = this.helper.createElementFromHtml(templates.list());
+    const origins = Object.groupBy(interactions, ia => ia.source.group);
 
-    let iaElements = [];
-    for (let ia of interactions) {
-      try {
-        //get template HTML and convert to element
-        let html = (typeof templates[ia.type] === 'function') 
-          ? templates[ia.type](ia)
-          : templates["unknown"](ia);
-        
-        let element = this.helper.createElementFromHtml(html);
-        iaElements.push(element); 
+    let originElements = [];
 
-      } catch (error) { console.error(error); }
+    for (const [origin, iaOrigin] of Object.entries(origins)) {
+      let groupList = this.helper.createElementFromHtml(templates.list(origin));
+
+      for (let ia of iaOrigin) {
+        try {
+          //get template HTML and convert to element
+          let html = (typeof templates[ia.type] === 'function') 
+            ? templates[ia.type](ia)
+            : templates["unknown"](ia);
+          
+          let element = this.helper.createElementFromHtml(html);
+          groupList.append(element);
+
+        } catch (error) { console.error(error); }
+      }
+
+      originElements.push(groupList);
     }
 
-    if (iaElements.length > 0) {
-      listElement.append(...iaElements);
-      placeholder.replaceWith(listElement);
+    if (originElements.length > 0) {
+      placeholder.replaceWith(...originElements);
     } else {
       placeholder.remove();
     }
@@ -91,10 +105,12 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
      * Composes a wrapper for the interactions
      * @returns {HTML}
      */
-    list() {
+    list(origin) {
       return this.helper.fillLiteralTemplate(
         `
-        <div class="interactions-list"></div>
+        <div class="interactions-list">
+          <h3 class="interaction-group">${origin}</h3>
+        </div>
         `,
         {}
       );  
@@ -407,6 +423,5 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
  * Changelog
  * 
  * 1.0.0 - Initial
- * 1.0.1 - Refactored '#part_origin', including title depending on origin
  * 2.0.0 - Changed source.origin default to 'webmention'
  */

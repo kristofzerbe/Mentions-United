@@ -2,14 +2,14 @@
  * Mentions United Provider plugin class for retreiving interaction from DevTo
  * 
  * @author Kristof Zerbe
- * @version 1.0.2
+ * @version 2.0.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://developers.forem.com/api/v1
  *
  * Options:
- *  - {String} sourceUrl  = URL of the mentioning page on dev.to
- *  - {Number} [sourceId] = ID of dev.to article (only available over API)
+ *  - {String} syndicationUrl  = Full URL of the dev.to post
+ *  - {Number} [syndicationId] = ID of dev.to post (only available over API)
  *
   * Supported origins:
  *  - devto
@@ -18,14 +18,14 @@
  *  - comment
  * 
  * Remarks:
- *  - If 'sourceId' is not provided, it will fetched over the published articles list
+ *  - If 'syndicationId' is not provided, it will fetched over the published articles list
  */
 class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
   key = "DEV.to"; // must be unique across all provider plugins for registration
 
   options = {
-    sourceUrl: "",
-    sourceId: 0
+    syndicationUrl: "",
+    syndicationId: 0
   }
 
   constructor(options) {
@@ -34,11 +34,11 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
     this.helper = new MentionsUnited.Helper();
 
     //check mandatory options
-    if (this.options.sourceUrl.length === 0) { throw "'sourceUrl' is missing"; }
+    if (this.options.syndicationUrl.length === 0) { throw "'syndicationUrl' is missing"; }
 
-    // get sourceId if not provided
-    if (this.options.sourceId === 0) { 
-      this.#getSourceId(); 
+    // get syndicationId if not provided
+    if (this.options.syndicationId === 0) { 
+      this.#getSyndicationId(); 
     }
   }
 
@@ -47,7 +47,7 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
    * @returns {Array.<MentionsUnited.Interaction>}
    */
   async retrieve() {
-    const msg = `${this.constructor.name}: Retreiving comments for ${this.options.sourceUrl} (${this.options.sourceId})`;
+    const msg = `${this.constructor.name}: Retreiving comments for ${this.options.syndicationUrl} (${this.options.syndicationId})`;
     console.time(msg);
 
     const apiResponse = await fetch(this.commentApiUrl());
@@ -61,7 +61,7 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
 
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  commentApiUrl() { return `https://dev.to/api/comments?a_id=${this.options.sourceId}` };
+  commentApiUrl() { return `https://dev.to/api/comments?a_id=${this.options.syndicationId}` };
 
   /**
    * Processes retrieved JSON data into flat array of Interactions 
@@ -91,14 +91,17 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
   #convertToInteraction(entry) {
     let r = new MentionsUnited.Interaction();
 
+    r.syndication.url = this.options.syndicationUrl;
+    r.syndication.title = "";
+
     r.type = entry.type_of;
     r.received = entry.created_at;
 
     r.source.provider = this.key;
     r.source.origin = "devto";
     r.source.sender = this.key;
-    r.source.url = this.options.sourceUrl;
-    r.source.id = this.sourceId;
+    r.source.url = this.options.syndicationUrl;
+    r.source.id = this.syndicationId;
     r.source.title = "";
 
     r.author.name = entry.user.name;
@@ -111,20 +114,20 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
   }
 
   /**
-   * Get sourceId from users article list synchronously
+   * Get syndicationId from users article list synchronously
    */
-  #getSourceId() {
+  #getSyndicationId() {
 
     //get username from article URL
-    const userName = new URL(this.options.sourceUrl).pathname.split("/")[1];
+    const userName = new URL(this.options.syndicationUrl).pathname.split("/")[1];
 
     //set api URL and get article data
     const apiUrl = `https://dev.to/api/articles?username=${userName}&per_page=1000`;
     const jsonArticles = this.helper.fetchJsonSync(apiUrl);
-    const dataArticle = jsonArticles.filter(a => a.url === this.options.sourceUrl)[0];
+    const dataArticle = jsonArticles.filter(a => a.url === this.options.syndicationUrl)[0];
 
     if (dataArticle) {
-      this.options.sourceId = dataArticle.id;
+      this.options.syndicationId = dataArticle.id;
     }
   }
 
@@ -135,4 +138,6 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
  * 1.0.0 - Initial
  * 1.0.1 - No data fix -> #processJsonData: entries not iterable
  * 1.0.2 - Set source.title explicit to empty
+ * 2.0.0 - Changed option names due to risk of confusion
+ *       - Introducting interaction.syndication
  */

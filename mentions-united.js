@@ -2,7 +2,7 @@
  * Mentions United main class
  * 
  * @author Kristof Zerbe
- * @version 1.0.1
+ * @version 1.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * This script relies on two different types of plug-ins: PROVIDER and RENDERER, 
@@ -45,6 +45,12 @@ class MentionsUnited {
     type; // type verb of the interaction (comment, like, reply, repost, mention, ...)
     received; // date the interaction was created or received
 
+    static Syndication = class Syndication {
+      url; // URL of the syndication post
+      title; // Title of the syndication post, to differentiate multiple posts of the original
+    }
+    syndication;
+
     static Source = class Source {
       provider; // pick-up point of the interaction
       origin; // origin system of the interaction
@@ -69,6 +75,7 @@ class MentionsUnited {
     content; 
 
     constructor() {
+      this.syndication = new Interaction.Syndication();
       this.source = new Interaction.Source();
       this.author = new Interaction.Author();
       this.content = new Interaction.Content();
@@ -271,6 +278,21 @@ class MentionsUnited {
       }
       return count;
     }
+
+    parseMarkdown(markdownText) {
+      const htmlText = markdownText
+        .replace(/^### (.*$)/gm, "<h3>$1</h3>")
+        .replace(/^## (.*$)/gm, "<h2>$1</h2>")
+        .replace(/^# (.*$)/gm, "<h1>$1</h1>")
+        .replace(/^\> (.*$)/gm, "<blockquote>$1</blockquote>")
+        .replace(/\*\*(.*)\*\*/gm, "<strong>$1</strong>")
+        .replace(/\*(.*)\*/gm, "<em>$1</em>")
+        .replace(/!\[(.*?)\]\((.*?)\)/gm, "<img alt='$1' src='$2' />")
+        .replace(/\[(.*?)\]\((.*?)\)/gm, "<a href='$2'>$1</a>")
+        //.replace(/\n$/gim, '<br />')
+        .replace(/([^\n]+\n?)/g, "\n<p>$1</p>\n")
+      return htmlText.trim();
+    }
    
   }
 
@@ -281,4 +303,6 @@ class MentionsUnited {
  * 1.0.0 - Initial
  * 1.0.1 - new helper 'countAttributesByName' for making keys unique in constructor, 
  *         when Provider plugin is registered multiple times with different URL's
+ * 1.0.2 - New helper 'parseMarkdown'
+ * 1.1.0 - Introducting interaction.syndication
  */

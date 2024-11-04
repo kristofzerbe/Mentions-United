@@ -2,15 +2,15 @@
  * Mentions United Provider plugin class for retreiving interactions from Pixelfed
  * 
  * @author Kristof Zerbe
- * @version 1.0.1
+ * @version 2.0.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: There is no proper API documentation, but the source code is freely available at: 
  *                    https://github.com/pixelfed/pixelfed/blob/dev/app/Http/Controllers/Api/ApiV1Controller.php
  * 
  * Options:
- *  - {String} sourceUrl          = Full URL of the mentioning page on Pixelfed
- *  - {String} sourceTitle        = Title of the post on Pixelfed, if multiple
+ *  - {String} syndicationUrl     = Full URL of the Pixelfed post
+ *  - {String} [syndicationTitle] = Title of the Pixelfed post, if multiple syndications of original post
  *  - {String} [apiBaseUrl]       = Base URL of API proxy, if existing
  *  - {String} [apiTokenReadOnly] = Token to access Pixelfed's API in Read-Only mode, if no proxy
  * 
@@ -39,11 +39,11 @@
  * 
 */
 class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
-  key = ""; // will be set via sourceUrl in constructor (must be unique across all provider plugins for registration)
+  key = ""; // will be set via syndicationUrl in constructor (must be unique across all provider plugins for registration)
   
   options = {
-    sourceUrl: "",
-    sourceTitle: "",
+    syndicationUrl: "",
+    syndicationTitle: "",
     apiBaseUrl: "",
     apiTokenReadOnly: ""
   }
@@ -53,13 +53,13 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
     this.options = {...this.options, ...options};
 
     //check mandatory options
-    if (this.options.sourceUrl.length === 0) { throw "'sourceUrl' is missing"; }
+    if (this.options.syndicationUrl.length === 0) { throw "'syndicationUrl' is missing"; }
     if (this.options.apiBaseUrl.length === 0 && this.options.apiTokenReadOnly.length === 0) { 
       throw "'apiTokenReadOnly' is missing, as no 'apiBaseUrl' is defined"; 
     }
 
-    //get needed information from sourceUrl
-    let pixelfedUrl = new URL(this.options.sourceUrl);
+    //get needed information from syndicationUrl
+    let pixelfedUrl = new URL(this.options.syndicationUrl);
     this.key = pixelfedUrl.hostname;
     this.sourceId = pixelfedUrl.pathname.split("/").pop();
     this.options.apiBaseUrl = this.options.apiBaseUrl ?? pixelfedUrl.origin;
@@ -70,7 +70,7 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
    * @returns {Array}
    */
   async retrieve() {
-    const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.sourceUrl}'`;
+    const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
     console.time(msg);
     
     // 1 - Reposts
@@ -134,15 +134,18 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
   #convertToInteraction(entry, type) {
     let r = new MentionsUnited.Interaction();
 
+    r.syndication.url = this.options.syndicationUrl;
+    r.syndication.title = this.options.syndicationTitle;
+
     r.type = type;
     r.received = (type === "reply") ? entry.created_at : undefined;
 
     r.source.provider = this.key;
     r.source.origin = "pixelfed";
     r.source.sender = this.key;
-    r.source.url = this.options.sourceUrl;
+    r.source.url = this.options.syndicationUrl;
     r.source.id = entry.id;
-    r.source.title = this.options.sourceTitle;
+    r.source.title = ""; //TODO: REMOVE: this.options.syndicationTitle;
 
     r.author.name = (type === "reply") ? entry.account.display_name : entry.display_name;
     r.author.avatar = (type === "reply") ? entry.account.avatar : entry.avatar;
@@ -159,4 +162,6 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
  * 
  * 1.0.0 - Initial
  * 1.0.1 - Introduction of 'sourceTitle', to be able to distinguish several Pixelfed sources textually
+ * 2.0.0 - Changed option names due to risk of confusion
+ *       - Introducting interaction.syndication
  */
