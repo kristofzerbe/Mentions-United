@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving webmentions from webmention.io
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://github.com/aaronpk/webmention.io
@@ -49,9 +49,9 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
    * Retrieve data from webmention.io
    * @returns {Array.<MentionsUnited.Interaction>}
    */
-  async retrieve() {
+  async retrieve(args) {
     const msg = `${this.constructor.name}: Retreiving webmentions for '${this.options.originalUrl}'`;
-    console.time(msg);
+    args.fStart(msg);
 
     const apiResponse = await fetch(this.webmentionApiUrl());
     const apiData = await apiResponse.json();
@@ -70,7 +70,7 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
       }
     };
 
-    console.timeEnd(msg);
+    args.fEnd(msg);
     return interactions;
   }
 
@@ -222,4 +222,6 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
  * 2.0.0 - Changed option name due to risk of confusion
  *       - Changed source.origin default to 'webmention'
  *       - Introducting interaction.syndication
+ * 2.1.0 - Introducing retrieve arguments
+ *       - Outsourced time measurement
  */

@@ -3,7 +3,7 @@
  * as text or anchor to jump to interaction list
  * 
  * @author Kristof Zerbe
- * @version 1.0.1
+ * @version 1.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -33,12 +33,12 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
 
   /**
    * Renders the total number anchor
-   * @param {Array.<MentionsUnited.Interaction>} interactions
+   * @param {Object} args
    */
-  render(interactions) {
+  render(args) {
 
     //nothing to show here -> exit
-    if (interactions.length === 0) { return; } 
+    if (args.interactions.length === 0) { return; } 
 
     //set and check placeholder where the anchor element will be inserted
     let placeholder = document.getElementById(this.options.placeholderId);
@@ -53,18 +53,18 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
       if (localStorage.getItem(storeKey)) {
         lastVisit = localStorage.getItem(storeKey);
       } else {
-        lastVisit = interactions.length; //for first visit
+        lastVisit = args.interactions.length; //for first visit
       }
-      if (interactions.length !== lastVisit) {
-        delta = (interactions.length - lastVisit);
+      if (args.interactions.length !== lastVisit) {
+        delta = (args.interactions.length - lastVisit);
       }
-      localStorage.setItem(storeKey, interactions.length);    
+      localStorage.setItem(storeKey, args.interactions.length);    
     }
     
     const templates = new this.#Templates(this.helper);
 
     let data = {
-      count: interactions.length,
+      count: args.interactions.length,
       delta: delta,
       anchorTargetId: this.options.anchorTargetId
     }
@@ -158,6 +158,7 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
- * 1.0.1  - Support for negative numbers and dedicated number sign
+ * 1.0.0 - Initial
+ * 1.1.0 - Support for negative numbers and dedicated number sign
+ * 1.2.0 - Changed render arguments
  */

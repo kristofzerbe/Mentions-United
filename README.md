@@ -493,6 +493,37 @@ By specifying a ``pageKey`` in the options, the total number can be temporarily 
 
 ![Example Total Number](_attachments/Renderer-Total-Number.png)
 
+---
+
+### Summary Line
+
+*File: [mentions-united-renderer_summary-line.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_summary-line.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This plugin creates a paragraph with information about the interactions retrieved, the number of unique providers and requests, and the retrieval duration.
+
+#### Options
+
+|                    | Type     | Description |
+| ------------------ | -------- | ----------- |
+| **placeholderId**  | String   | ID of the element which will be replaced by the generated HTML |
+| \[afterRender\]    | Callback | Function to call after the generated HTML was inserted into the page |
+
+#### Rendered HTML
+
+```html
+<p class="interactions-summary-line">
+  INTERACTION-COUNT interactions collected by 
+  <a target="_blank" href="https://github.com/kristofzerbe/MentionsUnited">Mentions United</a> 
+  via PROVIDER-COUNT unique providers and 
+  REQUEST-COUNT requests in DURATION seconds
+</p>
+```
+
+#### Example (unstyled)
+
+![Example Summary Line](_attachments/Renderer-Summary-Line.png)
+
 <p align="center">
   <img src="_attachments/divider.png" width="auto">
 </p>

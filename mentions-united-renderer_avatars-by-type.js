@@ -2,7 +2,7 @@
  * Mentions United Renderer plugin for displaying Interactions of specific type as avatars only
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -34,16 +34,16 @@ class MentionsUnitedRenderer_AvatarsByType extends MentionsUnited.Renderer {
 
   /**
    * Renders the list of avatars for interaction type
-   * @param {Array.<MentionsUnited.Interaction>} interactions
+   * @param {Object} args
    */
-  render(interactions) {
+  render(args) {
 
     //set and check placeholder where the element will be inserted
     let placeholder = document.getElementById(this.options.placeholderId);
     if (!placeholder) { throw "No placeholder defined to replace with avatars"; }
 
     //filter the needed interactions by given type
-    const typeInteractions = interactions.filter(ia => {
+    const typeInteractions = args.interactions.filter(ia => {
       return ia.type.toLowerCase() === this.options.typeVerb.toLowerCase();
     })
 
@@ -137,5 +137,6 @@ class MentionsUnitedRenderer_AvatarsByType extends MentionsUnited.Renderer {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.1.0 - Changed render arguments
  */

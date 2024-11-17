@@ -46,15 +46,15 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
    * Remarks:
    *  - be sure to set 'provider' to 'this.key' in every new instance of MentionsUnited.Interaction
    */
-  async retrieve() {
+  async retrieve(args) {
     const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
-    console.time(msg);
+    args.fStart(msg);
     
     const apiResponse = await fetch("__URL__");
     const apiData = await apiResponse.json();
     let interactions = this.#processJsonData(apiData);
     
-    console.timeEnd(msg);
+    args.fEnd(msg);
     return interactions;
 
   }

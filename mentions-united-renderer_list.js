@@ -2,7 +2,7 @@
  * Mentions United Renderer plugin for displaying Interactions as a list
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -30,9 +30,9 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
 
   /**
    * Renders Interactions
-   * @param {Array.<MentionsUnited.Interaction>} interactions
+   * @param {Object} args
    */
-  render(interactions) {
+  render(args) {
 
     //set and check placeholder where the anchor element will be inserted
     let placeholder = document.getElementById(this.options.placeholderId);
@@ -40,7 +40,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
 
     //filter types when specified and content is null
     if (this.options.skipTypes.length > 0) {
-      interactions = interactions.filter((ia) => {
+      args.interactions = args.interactions.filter((ia) => {
         return !(this.options.skipTypes.toLowerCase().includes(ia.type.toLowerCase()));
       });
     }
@@ -50,7 +50,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
     let listElement = this.helper.createElementFromHtml(templates.list());
 
     let iaElements = [];
-    for (let ia of interactions) {
+    for (let ia of args.interactions) {
       try {
         //get template HTML and convert to element
         let html = (typeof templates[ia.type] === 'function') 
@@ -407,6 +407,7 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
  * Changelog
  * 
  * 1.0.0 - Initial
- * 1.0.1 - Refactored '#part_origin', including title depending on origin
+ * 1.1.0 - Refactored '#part_origin', including title depending on origin
  * 2.0.0 - Changed source.origin default to 'webmention'
+ * 2.1.0 - Changed render arguments
  */

@@ -2,7 +2,7 @@
  * Mentions United Renderer plugin for displaying Interactions as a grouped list by origin
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -30,9 +30,9 @@ class MentionsUnitedRenderer_GroupListByOrigin extends MentionsUnited.Renderer {
 
   /**
    * Renders Interactions
-   * @param {Array.<MentionsUnited.Interaction>} interactions
+   * @param {Object} args
    */
-  render(interactions) {
+  render(args) {
 
     //set and check placeholder where the anchor element will be inserted
     let placeholder = document.getElementById(this.options.placeholderId);
@@ -40,13 +40,13 @@ class MentionsUnitedRenderer_GroupListByOrigin extends MentionsUnited.Renderer {
 
     //filter types when specified and content is null
     if (this.options.skipTypes.length > 0) {
-      interactions = interactions.filter((ia) => {
+      args.interactions = args.interactions.filter((ia) => {
         return !(this.options.skipTypes.toLowerCase().includes(ia.type.toLowerCase()));
       });
     }
 
     //build groups for origins with title from syndication, except for WEBMENTION
-    for (let ia of interactions) {
+    for (let ia of args.interactions) {
       ia.source.group = this.helper.capitalize(ia.source.origin);
       if (ia.source.origin.toLowerCase() != "webmention" && ia.syndication.title?.length > 0) {
         ia.source.group += (" (" + ia.syndication.title + ")" );
@@ -55,7 +55,7 @@ class MentionsUnitedRenderer_GroupListByOrigin extends MentionsUnited.Renderer {
 
     const templates = new this.#Templates(this.helper);
 
-    const origins = Object.groupBy(interactions, ia => ia.source.group);
+    const origins = Object.groupBy(args.interactions, ia => ia.source.group);
 
     let originElements = [];
 
@@ -424,4 +424,5 @@ class MentionsUnitedRenderer_GroupListByOrigin extends MentionsUnited.Renderer {
  * 
  * 1.0.0 - Initial
  * 2.0.0 - Changed source.origin default to 'webmention'
+ * 2.1.0 - Changed render arguments
  */

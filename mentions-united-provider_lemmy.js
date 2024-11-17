@@ -2,7 +2,7 @@
  * Sample for a Mentions United Provider plugin class for retreiving interactions from Lemmy
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * It would be wonderful of you open up a PR here to let me add your plugin to the project
  * 
@@ -52,16 +52,16 @@ class MentionsUnitedProvider_Lemmy extends MentionsUnited.Provider {
    * Remarks:
    *  - be sure to set 'provider' to 'this.key' in every new instance of MentionsUnited.Interaction
    */
-  async retrieve() {
+  async retrieve(args) {
     const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
-    console.time(msg);
+    args.fStart(msg);
     
     const apiResponse = await fetch(this.lemmyApiUrl());
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData.comments);
     
-    console.timeEnd(msg);
+    args.fEnd(msg);
     return interactions;
   }
 
@@ -118,4 +118,6 @@ class MentionsUnitedProvider_Lemmy extends MentionsUnited.Provider {
  * 1.0.0 - Initial
  * 2.0.0 - Changed option names due to risk of confusion
  *       - Introducting interaction.syndication
+ * 2.1.0 - Introducing retrieve arguments
+ *       - Outsourced time measurement
  */

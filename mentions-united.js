@@ -2,7 +2,7 @@
  * Mentions United main class
  * 
  * @author Kristof Zerbe
- * @version 1.1.0
+ * @version 2.0.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * This script relies on two different types of plug-ins: PROVIDER and RENDERER, 
@@ -92,6 +92,10 @@ class MentionsUnited {
   #renderers = {};
   #interactions = [];
 
+  #info = {
+    retrieval: {}
+  };
+
   constructor(settings, plugins) {
     this.settings = { ...this.settings, ...settings };
     this.helper = new MentionsUnited.Helper();
@@ -125,14 +129,28 @@ class MentionsUnited {
    * Calls the 'retrieve' method of all registered Provider plugins to get array of Interactions
    */
   load() {
+
+    this.#info.retrieval.start = window.performance.now();
+
     let fetches = [];
 
     for (const p in this.#providers) {
-      fetches.push(this.#providers[p].retrieve());
+      const args = {
+        fStart: (msg) => { 
+          console.time(msg); 
+          this.#providers[p].start = window.performance.now(); 
+        },
+        fEnd: (msg) => { 
+          console.timeEnd(msg); 
+          this.#providers[p].end = window.performance.now(); 
+        }
+      }
+      fetches.push(this.#providers[p].retrieve(args)); 
     }
 
     return Promise.all(fetches)
       .then((results) => {
+
         for (const res of results) {
           this.#interactions = this.#interactions.concat(res);
         }
@@ -160,6 +178,9 @@ class MentionsUnited {
         
         console.info("Interactions:", this.#interactions);
       })
+      .then(() => {
+        this.#info.retrieval.end = window.performance.now();
+      })
       .catch(console.error)
   }
 
@@ -170,7 +191,12 @@ class MentionsUnited {
 
     return new Promise((resolve) => {
       for (const p in this.#renderers) {
-        this.#renderers[p].render(this.#interactions);
+        const args = {
+          interactions: this.#interactions,
+          providers: this.#providers,
+          info: this.#info
+        }
+        this.#renderers[p].render(args);
       }
       resolve(this.#interactions.length);  
     });
@@ -301,8 +327,10 @@ class MentionsUnited {
  * Changelog
  * 
  * 1.0.0 - Initial
- * 1.0.1 - new helper 'countAttributesByName' for making keys unique in constructor, 
+ * 1.0.1 - New helper 'countAttributesByName' for making keys unique in constructor, 
  *         when Provider plugin is registered multiple times with different URL's
  * 1.0.2 - New helper 'parseMarkdown'
- * 1.1.0 - Introducting interaction.syndication
+ * 1.1.0 - Introducing interaction.syndication
+ * 2.0.0 - Introducing retrieve arguments
+ *       - Changed render arguments
  */

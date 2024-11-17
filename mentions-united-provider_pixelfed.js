@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interactions from Pixelfed
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: There is no proper API documentation, but the source code is freely available at: 
@@ -69,9 +69,9 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
    * Retrieve data from Pixelfed
    * @returns {Array}
    */
-  async retrieve() {
+  async retrieve(args) {
     const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
-    console.time(msg);
+    args.fStart(msg);
     
     // 1 - Reposts
     let interactionsReblogged = [];
@@ -103,7 +103,7 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
       interactionsContext = this.#processJsonData(apiDataContext.descendants ?? [], "reply");        
     } catch (e) { console.error(e); }
 
-    console.timeEnd(msg);
+    args.fEnd(msg);
     return [...interactionsReblogged, ...interactionsFavorited, ... interactionsContext];
   }
 
@@ -164,4 +164,6 @@ class MentionsUnitedProvider_Pixelfed  extends MentionsUnited.Provider {
  * 1.0.1 - Introduction of 'sourceTitle', to be able to distinguish several Pixelfed sources textually
  * 2.0.0 - Changed option names due to risk of confusion
  *       - Introducting interaction.syndication
+ * 2.1.0 - Introducing retrieve arguments
+ *       - Outsourced time measurement
  */

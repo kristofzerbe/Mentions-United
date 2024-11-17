@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interaction from DevTo
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://developers.forem.com/api/v1
@@ -46,16 +46,16 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
    * Retrieve comment data from dev.to
    * @returns {Array.<MentionsUnited.Interaction>}
    */
-  async retrieve() {
+  async retrieve(args) {
     const msg = `${this.constructor.name}: Retreiving comments for ${this.options.syndicationUrl} (${this.options.syndicationId})`;
-    console.time(msg);
+    args.fStart(msg);
 
     const apiResponse = await fetch(this.commentApiUrl());
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData);
 
-    console.timeEnd(msg);
+    args.fEnd(msg);
     return interactions;
   }
 
@@ -140,4 +140,6 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
  * 1.0.2 - Set source.title explicit to empty
  * 2.0.0 - Changed option names due to risk of confusion
  *       - Introducting interaction.syndication
+ * 2.1.0 - Introducing retrieve arguments
+ *       - Outsourced time measurement
  */
