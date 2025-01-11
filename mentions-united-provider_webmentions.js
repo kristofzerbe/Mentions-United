@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving webmentions from webmention.io
  * 
  * @author Kristof Zerbe
- * @version 2.1.0
+ * @version 2.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://github.com/aaronpk/webmention.io
@@ -10,6 +10,7 @@
  * Options:
  *  - {String} originalUrl         = Full URL of the original page mentioned (Permalink)
  *  - {Boolean} [tryResolveTitle]  = Should titles of mentioning pages be resolved
+ *  - {String} [skipOrigins]       = Comma-separated list of origins to skip
  * 
  * Supported origins:
  *  - webmention (native)
@@ -33,7 +34,8 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
   
   options = {
     originalUrl: "",
-    tryResolveTitle: false
+    tryResolveTitle: false,
+    skipOrigins: ""
   }
 
   constructor(options) {
@@ -57,6 +59,13 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData.children);
+
+    //filter out origins by option
+    if (this.options.skipOrigins.length > 0) {
+      interactions = interactions.filter((ia) => {
+        return !(this.options.skipOrigins.toLowerCase().includes(ia.source.origin.toLowerCase()));
+      });
+    }
 
     //Interaction adjustments depending on type ...
     for (let r of interactions) {
@@ -224,4 +233,6 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
  *       - Introducting interaction.syndication
  * 2.1.0 - Introducing retrieve arguments
  *       - Outsourced time measurement
+ * 2.2.0 - Introducing new optional option 'skipOrigins' to filter out interactions, 
+ *         which are retrieved by a native Provider for example
  */

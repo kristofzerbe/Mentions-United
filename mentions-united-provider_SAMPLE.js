@@ -10,7 +10,7 @@
  * 
  * Options:
  *  - {String} syndicationUrl     = Full URL of the __PROVIDER__ post
- *  - {String} syndicationTitle   = Title of the __PROVIDER__ post, if multiple syndications of original post
+ *  - {String} [syndicationTitle] = Title of the __PROVIDER__ post, if multiple syndications of original post
  * 
  * Supported origins:
  *  - __ORIGIN__

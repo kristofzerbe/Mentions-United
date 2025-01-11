@@ -149,6 +149,7 @@ This plugin is so far the only one that distinguishes between ``source.provider`
 | ------------------- | ------- | ----------- |
 | **originalUrl**     | String  | Full URL of the original page mentioned (Permalink) |
 | \[tryResolveTitle\] | Boolean | Should titles of mentioning pages be resolved |
+| \[skipOrigins\] | String | Comma-separated list of origins to skip |
 
 #### Supported Origins
 
@@ -180,6 +181,62 @@ This plugin is so far the only one that distinguishes between ``source.provider`
 mentionsUnited.register(new MentionsUnitedProvider_Webmentions({
   originalUrl: "__PAGE-URL__",
   tryResolveTitle: true
+}));
+```
+
+---
+
+### Mastodon
+
+*File: [mentions-united-provider_mastodon.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_mastodon.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This plugin fetches its data from a [Mastodon](https://joinmastodon.org/) instance natively.
+
+![Architecture Mastodon](_attachments/Provider-mastodon.png)
+
+#### Specials
+
+Mastodon has a total of three API endpoints via which interactions have to be requested: *Favoured* (Likes), *Reblogged* (Boosts) and *Context* for replies. These are called up concurrently and then merged.
+
+#### Options
+
+|                      | Type   | Description |
+| -------------------- | ------ | ----------- |
+| **syndicationUrl**   | String | Full URL of the Mastodon post |
+| \[syndicationTitle\] | String | Title of the Mastodon post, if multiple syndications of original post |
+| \[apiBaseUrl\]       | String | Base URL of API proxy, if existing |
+| \[apiTokenReadOnly\] | String | Token to access Mastodon's API in Read-Only mode, if no proxy |
+
+For getting public Likes and Boosts your don't need an **authentication token** when accessing the **public API**. As of now (January 2025, Mastodon API v4.0.0, https://docs.joinmastodon.org/methods/statuses/#context), the retrieval of a maximum of 60 public Replies is also possible without a token.
+
+#### Using an API Token
+
+In the plugin options you can either enter the token **directly** (if you don't care that anyone can use it to read your public Pixelfed data) or you can enter the base URL of an **API proxy** through which the Pixelfed requests are passed.
+
+In case you use the token in the options directly, the ``apiBaseUrl`` is taken automatically from the ``sourceUrl``.
+
+If you want to use the proxy option, you can find a suitable Node.js web application, made for this project, under **[Mentions United API-Proxy](https://github.com/kristofzerbe/Mentions-United-API-Proxy)**. You only need to find a suitable hoster for it, such as [Railway](https://railway.app) or the like.
+
+#### Supported Origins
+
+- mastodon
+
+#### Supported Type Verbs
+
+- like
+- repost
+- reply
+
+#### Initialization
+
+```html
+<script src="/js/mentions-united-provider_mastodon.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_Mastodon({
+  syndicationUrl: "__MASTODON-URL__"
 }));
 ```
 
