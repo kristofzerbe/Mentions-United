@@ -135,9 +135,12 @@ This plugin fetches its data from [Aaron Parecki's](https://github.com/aaronpk) 
 
 ![Architecture Webmention](_attachments/Provider-webmention.png)
 
+> [!NOTE]
+> In contrast to the native provider plugins (like Mastodon below), interactions on the platforms connected via brid.gy and webmention.io are collected as Webmentions via the post url, which means that mentions in other platform posts are also displayed and not just those directly attached to the syndication URL.
+
 #### Specials
 
-If the target URL is a Webmention (`source.origin` = ‘web’), i.e. another blogger has mentioned your page and sent a Webmention that was received at the webmention.io endpoint, you can set in the options that the plugin tries to fetch the **title of the post** mentioned. This usually looks a bit nicer when displayed than a pure URL.
+If the target URL is a Webmention (`source.origin` = 'web'), i.e. another blogger has mentioned your page and sent a Webmention that was received at the webmention.io endpoint, you can set in the options that the plugin tries to fetch the **title of the post** mentioned. This usually looks a bit nicer when displayed than a pure URL.
 
 Mastodon, among others, allows users to use **emojis** in their user name. These are automatically resolved by the plugin via the respective instance as an URL to a PNG image.
 
