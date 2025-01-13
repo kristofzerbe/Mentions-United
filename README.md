@@ -37,9 +37,7 @@ The general procedure is as follows ... see section 'Usage' for more details:
 
 The system currently offers 3 Provider plugins and 3 Renderer plugins (see sections below) and more are planned. But it is definitely open for new plugins from the community. **It would therefore be absolutely fantastic if you would write your own plugin and make it available to all other users here via a pull request!**
 
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Main Script
 
@@ -103,9 +101,7 @@ const mentionsUnited = new MentionsUnited({
 });
 ```
 
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Provider Plugins
 
@@ -122,9 +118,9 @@ The implementation of a Provider plugin is a class which extends from ``Mentions
 
 The following Provider plugins are currently available:
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Webmentions
+### Provider: Webmentions
 
 *File: [mentions-united-provider_webmentions.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_webmentions.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -187,9 +183,9 @@ mentionsUnited.register(new MentionsUnitedProvider_Webmentions({
 }));
 ```
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Mastodon
+### Provider: Mastodon
 
 *File: [mentions-united-provider_mastodon.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_mastodon.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -243,9 +239,9 @@ mentionsUnited.register(new MentionsUnitedProvider_Mastodon({
 }));
 ```
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Pixelfed
+### Provider: Pixelfed
 
 *File: [mentions-united-provider_pixelfed.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_pixelfed.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -298,9 +294,52 @@ mentionsUnited.register(new MentionsUnitedProvider_Pixelfed({
 }));
 ```
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### DEV.to
+### Provider: Lemmy
+
+*File: [mentions-united-provider_lemmy.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_lemmy.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This plugin fetches its data from a [Lemmy](https://join-lemmy.org/) instance.
+
+![Architecture Lemmy](_attachments/Provider-lemmy.png)
+
+#### Specials
+
+Lemmy is organized by instances, where you have your account, and **communities**, where you post your link or your question in. The two do not have to be the same. The option `syndicationCommunity` is only required if you publish your post in several communities and want to be able to distinguish the syndications on rendering the interactions.
+
+#### Options
+
+|                          | Type   | Description |
+| ------------------------ | ------ | ----------- |
+| **syndicationUrl**       | String | Full URL of the Lemmy post |
+| \[syndicationCommunity\] | String | Community name of the Lemmy post |
+
+#### Supported Origins
+
+- lemmy
+
+#### Supported Type Verbs
+
+- comment
+
+#### Initialization
+
+```html
+<script src="/js/mentions-united-provider_lemmy.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_Lemmy({
+  syndicationUrl: "__LEMMY-URL__",
+  syndicationCommunity: "__LEMMY-COMMUNITY__"
+}));
+```
+
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
+### Provider: DEV.to
 
 *File: [mentions-united-provider_devto.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_devto.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -342,52 +381,7 @@ mentionsUnited.register(new MentionsUnitedProvider_DevTo({
 }));
 ```
 
----
-
-### Lemmy
-
-*File: [mentions-united-provider_lemmy.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_lemmy.js)*  
-*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
-
-This plugin fetches its data from a [Lemmy](https://join-lemmy.org/) instance.
-
-![Architecture Lemmy](_attachments/Provider-lemmy.png)
-
-#### Specials
-
-Lemmy is organized by instances, where you have your account, and **communities**, where you post your link or your question in. The two do not have to be the same. The option `syndicationCommunity` is only required if you publish your post in several communities and want to be able to distinguish the syndications on rendering the interactions.
-
-#### Options
-
-|                          | Type   | Description |
-| ------------------------ | ------ | ----------- |
-| **syndicationUrl**       | String | Full URL of the Lemmy post |
-| \[syndicationCommunity\] | String | Community name of the Lemmy post |
-
-#### Supported Origins
-
-- lemmy
-
-#### Supported Type Verbs
-
-- comment
-
-#### Initialization
-
-```html
-<script src="/js/mentions-united-provider_lemmy.js"></script>
-```
-
-```js
-mentionsUnited.register(new MentionsUnitedProvider_Lemmy({
-  syndicationUrl: "__LEMMY-URL__",
-  syndicationCommunity: "__LEMMY-COMMUNITY__"
-}));
-```
-
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Renderer Plugins
 
@@ -404,9 +398,9 @@ The implementation of a Renderer plugin is a class which extends from ``Mentions
 
 The following Renderer plugins are currently available:
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Avatars By Type
+### Renderer: Avatars By Type
 
 *File: [mentions-united-renderer_avatars-by-type.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_avatars-by-type.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -438,9 +432,9 @@ This plugin creates an inline list of avatars of a specific interaction type. It
 
 ![Example Avatars By Type](_attachments/Renderer-Avatars-by-Type.png)
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### List
+### Renderer: List
 
 *File: [mentions-united-renderer_list.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_list.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -484,9 +478,9 @@ The ``skipTypes`` option can be used to filter out unwanted interactions by type
 
 ![Example List](_attachments/Renderer-List.png)
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Grouplist by Origin
+### Renderer: Grouplist by Origin
 
 *File: [mentions-united-renderer_grouplist-by-origin.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_grouplist-by-origin.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -520,9 +514,9 @@ This plugin renders the interactions the same as **List** do, but in groups for 
 
 ![Example Grouplist by Origin](_attachments/Renderer-Grouplist-by-Origin.png)
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Total Number
+### Renderer: Total Number
 
 *File: [mentions-united-renderer_total-number.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_total-number.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -553,9 +547,9 @@ By specifying a ``pageKey`` in the options, the total number can be temporarily 
 
 ![Example Total Number](_attachments/Renderer-Total-Number.png)
 
----
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
-### Summary Line
+### Renderer: Summary Line
 
 *File: [mentions-united-renderer_summary-line.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-renderer_summary-line.js)*  
 *Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
@@ -584,17 +578,13 @@ This plugin creates a paragraph with information about the interactions retrieve
 
 ![Example Summary Line](_attachments/Renderer-Summary-Line.png)
 
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Install
 
 There is no installation routine for the scripts. Simply copy the main script and all needed plugin scripts into the folder of your project where the other JavaScript files are located.
 
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Demo & Usage
 
@@ -655,9 +645,7 @@ mentionsUnited.load()
 ...
 ```
 
-<p align="center">
-  <img src="_attachments/divider.png" width="auto">
-</p>
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## More Information
 
