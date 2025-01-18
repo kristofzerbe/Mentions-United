@@ -53,6 +53,8 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
     const apiResponse = await fetch("__URL__");
     const apiData = await apiResponse.json();
     let interactions = this.#processJsonData(apiData);
+
+    args.fCount();
     
     args.fEnd(msg);
     return interactions;
@@ -107,5 +109,5 @@ class MentionsUnitedProvider_NAME extends MentionsUnited.Provider {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
  */

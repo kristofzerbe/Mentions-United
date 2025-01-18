@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interactions from Pixelfed
  * 
  * @author Kristof Zerbe
- * @version 2.1.1
+ * @version 2.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: There is no proper API documentation, but the source code is freely available at: 
@@ -87,7 +87,9 @@ class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
       const apiResponseReblogged = await fetch(this.rebloggedApiUrl(), fetchOptions);
       const apiDataReblogged = await apiResponseReblogged.json();
       interactionsReblogged = this.#processJsonData(apiDataReblogged ?? [], "repost");        
-    } catch (e) { console.error(e); }
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
     // 2 - Likes
     let interactionsFavorited = [];
@@ -95,15 +97,16 @@ class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
       const apiResponseFavorited = await fetch(this.favoritedApiUrl(), fetchOptions);
       const apiDataFavorited = await apiResponseFavorited.json();
       interactionsFavorited = this.#processJsonData(apiDataFavorited ?? [], "like");        
-    } catch (e) { console.error(e); }
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
     // 3 - Replies
     let interactionsContext = [];
     try {
-      const apiResponseContext = await fetch(this.contextApiUrl(), fetchOptions);
-      const apiDataContext = await apiResponseContext.json();
-      interactionsContext = this.#processJsonData(apiDataContext.descendants ?? [], "reply");        
-    } catch (e) { console.error(e); }
+      await this.#traverseContextTree(this.sourceId, interactionsContext, "reply", args.fCount);
+    } 
+    catch (e) { console.error(e); }
 
     args.fEnd(msg);
     return [...interactionsReblogged, ...interactionsFavorited, ... interactionsContext];
@@ -111,11 +114,34 @@ class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
 
   //////////////////////////////////////////////////////////////////////////////////////////
   
-  statusApiUrl() { return `${this.options.apiBaseUrl}/api/v1/statuses/${this.sourceId}` };
-  contextApiUrl() { return `${this.options.apiBaseUrl}/api/v1/statuses/${this.sourceId}/context` };
+  contextApiUrl(id) { return `${this.options.apiBaseUrl}/api/v1/statuses/${id}/context` };
   favoritedApiUrl() { return `${this.options.apiBaseUrl}/api/v1/statuses/${this.sourceId}/favourited_by`; }
   rebloggedApiUrl() { return `${this.options.apiBaseUrl}/api/v1/statuses/${this.sourceId}/reblogged_by`; }
   
+  /**
+   * Traverse context tree recursively over descendants to get comments and their replies
+   * @param {Number} id 
+   * @param {Array.<MentionsUnited.Interaction>} interactionsContext 
+   * @param {String} type 
+   * @param {Func} fCount 
+   */
+  async #traverseContextTree(id, interactionsContext, type, fCount) {
+    let apiResponseContext = await fetch(this.contextApiUrl(id));
+    let apiDataContext = await apiResponseContext.json();
+    fCount();
+
+    if (apiDataContext.descendants.length > 0) {
+      let requests = [];
+      apiDataContext.descendants.forEach((descendant) => {
+        if (!interactionsContext.some((i) => i.source.id === descendant.id)) { 
+          interactionsContext.push(this.#convertToInteraction(descendant, type));
+        }
+        requests.push(this.#traverseContextTree(descendant.id, interactionsContext, "reply", fCount));
+      });
+      return Promise.all(requests);
+    }
+  }
+
   /**
    * Processes retrieved JSON data into flat array of Interactions 
    * @param {Array.<Object>} entries
@@ -146,9 +172,9 @@ class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
     r.source.provider = this.key;
     r.source.origin = "pixelfed";
     r.source.sender = this.key;
-    r.source.url = this.options.syndicationUrl;
+    r.source.url = (type === "reply") ? entry.url : this.options.syndicationUrl;
     r.source.id = entry.id;
-    r.source.title = ""; //TODO: REMOVE: this.options.syndicationTitle;
+    r.source.title = "";
 
     r.author.name = (type === "reply") ? entry.account.display_name : entry.display_name;
     r.author.avatar = (type === "reply") ? entry.account.avatar : entry.avatar;
@@ -171,4 +197,6 @@ class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
  *       - Outsourced time measurement
  * 2.1.1 - Clean up retrieving by introducing fetchOptions
  *       - Minor text changes
+ * 2.2.0 - Added traversing of context tree for replies
+ *       - Added args.fCount() to count requests
  */

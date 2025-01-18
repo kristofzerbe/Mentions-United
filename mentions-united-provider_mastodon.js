@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interactions from Mastodon
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * 
  * API Documentation: https://docs.joinmastodon.org/client/intro/
@@ -87,7 +87,9 @@ class MentionsUnitedProvider_Mastodon extends MentionsUnited.Provider {
       const apiResponseReblogged = await fetch(this.rebloggedApiUrl(), fetchOptions);
       const apiDataReblogged = await apiResponseReblogged.json();
       interactionsReblogged = this.#processJsonData(apiDataReblogged ?? [], "repost");        
-    } catch (e) { console.error(e); }
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
     // 2 - Likes
     let interactionsFavorited = [];
@@ -95,7 +97,9 @@ class MentionsUnitedProvider_Mastodon extends MentionsUnited.Provider {
       const apiResponseFavorited = await fetch(this.favoritedApiUrl(), fetchOptions);
       const apiDataFavorited = await apiResponseFavorited.json();
       interactionsFavorited = this.#processJsonData(apiDataFavorited ?? [], "like");        
-    } catch (e) { console.error(e); }
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
     
     // 3 - Replies
     let interactionsContext = [];
@@ -103,7 +107,9 @@ class MentionsUnitedProvider_Mastodon extends MentionsUnited.Provider {
       const apiResponseContext = await fetch(this.contextApiUrl(), fetchOptions);
       const apiDataContext = await apiResponseContext.json();
       interactionsContext = this.#processJsonData(apiDataContext.descendants ?? [], "reply");        
-    } catch (e) { console.error(e); }
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
     args.fEnd(msg);
     return [...interactionsReblogged, ...interactionsFavorited, ... interactionsContext];
@@ -162,5 +168,6 @@ class MentionsUnitedProvider_Mastodon extends MentionsUnited.Provider {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.1.0 - Added args.fCount() to count requests
  */

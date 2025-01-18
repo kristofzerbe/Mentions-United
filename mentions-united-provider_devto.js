@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interaction from DevTo
  * 
  * @author Kristof Zerbe
- * @version 2.1.0
+ * @version 2.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://developers.forem.com/api/v1
@@ -54,6 +54,8 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData);
+
+    args.fCount();
 
     args.fEnd(msg);
     return interactions;
@@ -142,4 +144,5 @@ class MentionsUnitedProvider_DevTo  extends MentionsUnited.Provider {
  *       - Introducting interaction.syndication
  * 2.1.0 - Introducing retrieve arguments
  *       - Outsourced time measurement
+ * 2.2.0 - Added args.fCount() to count request
  */

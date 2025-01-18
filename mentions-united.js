@@ -2,7 +2,7 @@
  * Mentions United main class
  * 
  * @author Kristof Zerbe
- * @version 2.0.0
+ * @version 2.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * This script relies on two different types of plug-ins: PROVIDER and RENDERER, 
@@ -26,6 +26,7 @@ class MentionsUnited {
     options = {}; // options for the plugin
     constructor(options) {}; // constructor that takes the needed options
     async retrieve() {}; // main method to retrieve interactions from provider
+    requests = 0; // number of requests
   }
 
   /** 
@@ -143,6 +144,9 @@ class MentionsUnited {
         fEnd: (msg) => { 
           console.timeEnd(msg); 
           this.#providers[p].end = window.performance.now(); 
+        },
+        fCount: () => {
+          this.#providers[p].requests += 1;
         }
       }
       fetches.push(this.#providers[p].retrieve(args)); 
@@ -333,4 +337,5 @@ class MentionsUnited {
  * 1.1.0 - Introducing interaction.syndication
  * 2.0.0 - Introducing retrieve arguments
  *       - Changed render arguments
+ * 2.1.0 - New args function fCount to count requests
  */

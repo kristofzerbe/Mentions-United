@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving webmentions from webmention.io
  * 
  * @author Kristof Zerbe
- * @version 2.2.0
+ * @version 2.3.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://github.com/aaronpk/webmention.io
@@ -59,6 +59,8 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData.children);
+
+    args.fCount();
 
     //filter out origins by option
     if (this.options.skipOrigins.length > 0) {
@@ -235,4 +237,5 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
  *       - Outsourced time measurement
  * 2.2.0 - Introducing new optional option 'skipOrigins' to filter out interactions, 
  *         which are retrieved by a native Provider for example
+ * 2.3.0 - Added args.fCount() to count request
  */

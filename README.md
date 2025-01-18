@@ -35,7 +35,7 @@ The general procedure is as follows ... see section 'Usage' for more details:
 4. the main method `load` is called to instruct all Provider plugins to fetch the data
 5. the main method `show` is called afterwards to instruct all Renderer plugins to generate the HTML for all retrieved interactions and insert it into the page
 
-The system currently offers 3 Provider plugins and 3 Renderer plugins (see sections below) and more are planned. But it is definitely open for new plugins from the community. **It would therefore be absolutely fantastic if you would write your own plugin and make it available to all other users here via a pull request!**
+The system currently offers **7 Provider** plugins and **6 Renderer** plugins (see sections below) and more are planned. But it is definitely open for new plugins from the community. **It would therefore be absolutely fantastic if you would write your own plugin and make it available to all other users here via a pull request!**
 
 <p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
@@ -104,6 +104,8 @@ const mentionsUnited = new MentionsUnited({
 <p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
 ## Provider Plugins
+
+![Provider Overview](_attachments/Provider-Overview.png)
 
 A Provider plugin fetches all interactions from a specific platform using the given options and brings them into the common form of a `MentionsUnited.Interaction`.
 
@@ -291,6 +293,51 @@ If you want to use the proxy option, you can find a suitable Node.js web applica
 mentionsUnited.register(new MentionsUnitedProvider_Pixelfed({
   syndicationUrl: "__PIXELFED-URL__",
   apiBaseUrl: "__PROXY-BASE_URL__"
+}));
+```
+
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
+### Provider: Vernissage
+
+*File: [mentions-united-provider_vernissage.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_vernissage.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This plugin fetches its data from a [Vernissage](https://github.com/VernissageApp) instance, for example [vernissage.photos](https://vernissage.photos)
+
+![Architecture Vernissage](_attachments/Provider-vernissage.png)
+
+#### Specials
+
+Vernissage has a total of three API endpoints via which interactions have to be requested: *Favourited*, *Reblogged* and *Context* for comments and replies to comments. These are called up concurrently and then merged. However, in the current beta version if the API, *Context* only returns the first level of conversations (comments), with additional requests used to collect the responses to these comments.
+
+#### Options
+
+|                      | Type   | Description |
+| -------------------- | ------ | ----------- |
+| **syndicationUrl**   | String | Full URL of the Vernissage post |
+| \[syndicationTitle\] | String | Title of the Vernissage post, if multiple syndications of original post |
+
+#### Supported Origins
+
+- vernissage
+
+#### Supported Type Verbs
+
+- like
+- repost
+- comment
+- reply
+
+#### Initialization
+
+```html
+<script src="/js/mentions-united-provider_vernissage.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_Pixelfed({
+  syndicationUrl: "__VERNISSAGE-URL__"
 }));
 ```
 

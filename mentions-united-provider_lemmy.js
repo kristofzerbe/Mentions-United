@@ -2,7 +2,7 @@
  * Sample for a Mentions United Provider plugin class for retreiving interactions from Lemmy
  * 
  * @author Kristof Zerbe
- * @version 2.1.0
+ * @version 2.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * It would be wonderful of you open up a PR here to let me add your plugin to the project
  * 
@@ -60,6 +60,8 @@ class MentionsUnitedProvider_Lemmy extends MentionsUnited.Provider {
     const apiData = await apiResponse.json();
 
     let interactions = this.#processJsonData(apiData.comments);
+
+    args.fCount();
     
     args.fEnd(msg);
     return interactions;
@@ -120,4 +122,5 @@ class MentionsUnitedProvider_Lemmy extends MentionsUnited.Provider {
  *       - Introducting interaction.syndication
  * 2.1.0 - Introducing retrieve arguments
  *       - Outsourced time measurement
+ * 2.2.0 - Added args.fCount() to count request
  */

@@ -2,7 +2,7 @@
  * Mentions United Renderer plugin for displaying a summary line
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.1.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * Options:
@@ -39,7 +39,7 @@ class MentionsUnitedRenderer_SummaryLine extends MentionsUnited.Renderer {
 
     let data = {
       iaCount: args.interactions.length,
-      providerCount: Object.keys(args.providers).length,
+      requestsCount: Object.values(args.providers).reduce((r, {requests}) => r + requests, 0), //Object.keys(args.providers).length,
       uniqueProviderCount: Object.keys(Object.groupBy(Object.values(args.providers), p => p.key)).length,
       duration: ((args.info.retrieval.end - args.info.retrieval.start) / 1000).toFixed(2)
     }
@@ -79,7 +79,7 @@ class MentionsUnitedRenderer_SummaryLine extends MentionsUnited.Renderer {
           ${data.iaCount} interaction${data.iaCount === 1 ? "" : "s"} collected by 
           <a target="_blank" href="https://github.com/kristofzerbe/MentionsUnited">Mentions United</a> 
           via ${data.uniqueProviderCount} unique provider${data.uniqueProviderCount === 1 ? "" : "s"} and 
-          ${data.providerCount} request${data.providerCount === 1 ? "" : "s"} in ${data.duration} seconds
+          ${data.requestsCount} request${data.requestsCount === 1 ? "" : "s"} in ${data.duration} seconds
         </p>
         `,
         data
@@ -92,5 +92,6 @@ class MentionsUnitedRenderer_SummaryLine extends MentionsUnited.Renderer {
 /**
  * Changelog
  * 
- * 1.0.0  - Initial
+ * 1.0.0 - Initial
+ * 1.1.0 - Changed providerCount into true requestCount
  */
