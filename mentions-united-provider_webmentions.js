@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving webmentions from webmention.io
  * 
  * @author Kristof Zerbe
- * @version 2.3.0
+ * @version 2.3.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub}
  * 
  * API Documentation: https://github.com/aaronpk/webmention.io
@@ -45,6 +45,9 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
 
     //check mandatory options
     if (this.options.originalUrl.length === 0) { throw "'originalUrl' is missing"; }
+
+    //ensure trailing slash
+    if (this.options.originalUrl.slice(-1) != '/') this.options.originalUrl += '/';
   }
 
   /**
@@ -238,4 +241,5 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
  * 2.2.0 - Introducing new optional option 'skipOrigins' to filter out interactions, 
  *         which are retrieved by a native Provider for example
  * 2.3.0 - Added args.fCount() to count request
+ * 2.3.1 - Fix for missing trailing slash in originalUrl
  */
