@@ -265,7 +265,7 @@ Pixelfed has a total of three API endpoints via which interactions have to be re
 | \[apiBaseUrl\]       | String | Base URL of API proxy, if existing |
 | \[apiTokenReadOnly\] | String | Token to access Pixelfed's API in Read-Only mode, if no proxy |
 
-For Pixelfed instances, you must specify an **authentication token** when accessing the **public API**, which you can create in the Pixelfed settings under ‘Applications’. Only one with read-only rights is required.
+For Pixelfed instances, you must specify an **authentication token** when accessing the **public API**, which you can create in the Pixelfed settings under 'Applications'. Only one with read-only rights is required.
 
 In the plugin options you can either enter the token **directly** (if you don't care that anyone can use it to read your public Pixelfed data) or you can enter the base URL of an **API proxy** through which the Pixelfed requests are passed.
 
@@ -381,6 +381,48 @@ Lemmy is organized by instances, where you have your account, and **communities*
 mentionsUnited.register(new MentionsUnitedProvider_Lemmy({
   syndicationUrl: "__LEMMY-URL__",
   syndicationCommunity: "__LEMMY-COMMUNITY__"
+}));
+```
+
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
+### Provider: Peertube
+
+*File: [mentions-united-provider_peertube.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_peertube.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This plugin fetches comments from a [Peertube](https://joinpeertube.org) instance.
+
+![Architecture Peertube](_attachments/Provider-peertube.png)
+
+#### Specials
+
+The comment data (threads) are pulled from the open and freely available Feed API. Unfortunately, the AUTHOR part of the data currently only consists of the author's name and profile URL. Therefore, the complete author data, including avatars, is fetched addionally via the freely available Account REST-API. See also the [GitHub feature request](https://github.com/Chocobozzz/PeerTube/issues/6998) in the Peertube project.
+
+#### Options
+
+|                     | Type   | Description |
+| ------------------- | ------ | ----------- |
+| **syndicationUrl**  | String | Full URL of the Peertube post |
+| \[syndicationTitle\] | String | Title of the Peertube post, if multiple syndications of original post |
+
+#### Supported Origins
+
+- peertube
+
+#### Supported Type Verbs
+
+- comment
+
+#### Initialization
+
+```html
+<script src="/js/mentions-united-provider_peertube.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_Peertube({
+  syndicationUrl: "__PEERTUBE-URL__"
 }));
 ```
 

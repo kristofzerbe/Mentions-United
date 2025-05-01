@@ -34,7 +34,6 @@ class MentionsUnitedProvider_Vernissage extends MentionsUnited.Provider {
   constructor(options) {
     super();
     this.options = {...this.options, ...options};
-    this.helper = new MentionsUnited.Helper(); // if needed
 
     //check mandatory options
     if (this.options.syndicationUrl.length === 0) { throw "'syndicationUrl' is missing"; }

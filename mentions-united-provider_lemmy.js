@@ -4,7 +4,6 @@
  * @author Kristof Zerbe
  * @version 2.2.0
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
- * It would be wonderful of you open up a PR here to let me add your plugin to the project
  * 
  * API Documentation: https://github.com/MV-GH/lemmy_openapi_spec
  *                    https://lemmy.readme.io/reference
