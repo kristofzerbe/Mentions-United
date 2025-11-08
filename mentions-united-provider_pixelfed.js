@@ -34,7 +34,7 @@
  *    You can search for 'tokenCan('read')' in the Pixelfed source code to see what 
  *    information you are making freely available with it.
  *
- *    However, both variants require the token, that you can generate your token at: 
+ *    However, both variants require the token, that you can generate at: 
  *    https://__INSTANCE__/settings/applications
 */
 class MentionsUnitedProvider_Pixelfed extends MentionsUnited.Provider {
