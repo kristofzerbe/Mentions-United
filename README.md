@@ -118,9 +118,9 @@ The implementation of a Provider plugin is a class which extends from ``Mentions
 | **constructor(options) {};** | Constructor   | Constructor that takes the needed options |
 | **async retrieve() {};**     | Public Method | Async main method to retrieve interactions from provider |
 
-The following Provider plugins are currently available:
-
 <p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
+The following Provider plugins are currently available:
 
 ### Provider: Webmentions
 
