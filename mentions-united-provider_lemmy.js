@@ -1,5 +1,5 @@
 /**
- * Sample for a Mentions United Provider plugin class for retreiving interactions from Lemmy
+ * Mentions United Provider plugin class for retreiving interactions from Lemmy
  * 
  * @author Kristof Zerbe
  * @version 2.2.0

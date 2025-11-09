@@ -1,5 +1,5 @@
 /**
- * Sample for a Mentions United Provider plugin class for retreiving comments from GitHub Issues
+ * Mentions United Provider plugin class for retreiving comments from GitHub Issues
  * 
  * @author Kristof Zerbe
  * @version 1.0.0
