@@ -122,6 +122,17 @@ The implementation of a Provider plugin is a class which extends from ``Mentions
 
 The following Provider plugins are currently available:
 
+* [Webmentions](#provider-webmentions)
+* [GitHub](#provider-github)
+* [Mastodon](#provider-mastodon)
+* [Pixelfed](#provider-pixelfed)
+* [Vernissage](#provider-vernissage)
+* [Lemmy](#provider-lemmy)
+* [Peertube](#provider-peertube)
+* [DEV.to](#provider-devto)
+
+---
+
 ### Provider: Webmentions
 
 *File: [mentions-united-provider_webmentions.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_webmentions.js)*  
@@ -187,6 +198,58 @@ mentionsUnited.register(new MentionsUnitedProvider_Webmentions({
 
 <p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
+### Provider: GitHub
+
+*File: [mentions-united-provider_github.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_github.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+This native plugin fetches comments directly from a GitHub issue when used as a commenting platform (see post [Using GitHub as Commenting Platform, 2025 Edition](https://kiko.io/post/Using-GitHub-as-Commenting-Platform-2025-Edition/) as an example).
+
+![Architecture GitHub](_attachments/Provider-github.png)
+
+#### Specials
+
+GitHub has a very comprehensive API. To minimize data transfer, this plugin uses GitHub **GraphQL** with a specially tailored query that also resolves the name of an author.
+
+#### Options
+
+|                      | Type   | Description |
+| -------------------- | ------ | ----------- |
+| **syndicationUrl**   | String | Full URL of the dev.to post |
+| \[apiBaseUrl\]       | String | Base URL of API proxy, if existing |
+| \[apiTokenReadOnly\] | String | Token to access GitHub's API, if no proxy |
+
+To access the GitHub API you have to use either a **Fine-Grained Personal Access Token**, which includes read access to public repositories, or a **Personal Access Token (classic)** with the ``public_repo`` scope. You can create one or the other at https://github.com/settings/tokens.
+
+In the plugin options you can either enter the token **directly** (if you don't care that anyone can use it to read your public GitHub data) or you can enter the base URL of an **API proxy** through which the GitHub requests are passed.
+
+In case you use the token in the options directly, the ``apiBaseUrl`` is automatically set to the value ``https://api.github.com/graphql``.
+
+If you want to use the proxy option, you can find a suitable Node.js web application, made for this project, under **[Mentions United API-Proxy](https://github.com/kristofzerbe/Mentions-United-API-Proxy)**. You only need to find a suitable hoster for it, such as [Railway](https://railway.app) or the like.
+
+#### Supported Origins
+
+- github
+
+#### Supported Type Verbs
+
+- comment
+
+#### Initialization (with Proxy)
+
+```html
+<script src="/js/mentions-united-provider_github.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_GitHub({
+  syndicationUrl: "__GITHUB-ISSUE-URL__",
+  apiBaseUrl: "__PROXY-BASE_URL__"
+}));
+```
+
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
 ### Provider: Mastodon
 
 *File: [mentions-united-provider_mastodon.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_mastodon.js)*  
@@ -211,9 +274,7 @@ Mastodon has a total of three API endpoints via which interactions have to be re
 
 For getting public Likes and Boosts your don't need an **authentication token** when accessing the **public API**. As of now (January 2025, Mastodon API v4.0.0, https://docs.joinmastodon.org/methods/statuses/#context), the retrieval of a maximum of 60 public Replies is also possible without a token.
 
-#### Using an API Token
-
-In the plugin options you can either enter the token **directly** (if you don't care that anyone can use it to read your public Pixelfed data) or you can enter the base URL of an **API proxy** through which the Pixelfed requests are passed.
+In the plugin options you can either enter the token **directly** (if you don't care that anyone can use it to read your public Mastodon data) or you can enter the base URL of an **API proxy** through which the Mastodon requests are passed.
 
 In case you use the token in the options directly, the ``apiBaseUrl`` is taken automatically from the ``sourceUrl``.
 
@@ -485,9 +546,16 @@ The implementation of a Renderer plugin is a class which extends from ``Mentions
 | **constructor(options) {};** | Constructor   | Constructor that takes the needed options |
 | **render(interactions) {};** | Public Method | Main method to render interactions via templates |
 
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
 The following Renderer plugins are currently available:
 
-<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+* [Avatars By Type](#renderer-avatars-by-type)
+* [Grouplist by Origin](#renderer-grouplist-by-origin)
+* [Total Number](#renderer-total-number)
+* [Summary Line](#renderer-summary-line)
+
+---
 
 ### Renderer: Avatars By Type
 
