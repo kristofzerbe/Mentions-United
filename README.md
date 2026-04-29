@@ -35,7 +35,7 @@ The general procedure is as follows ... see section 'Usage' for more details:
 4. the main method `load` is called to instruct all Provider plugins to fetch the data
 5. the main method `show` is called afterwards to instruct all Renderer plugins to generate the HTML for all retrieved interactions and insert it into the page
 
-The system currently offers **7 Provider** plugins and **6 Renderer** plugins (see sections below) and more are planned. But it is definitely open for new plugins from the community. **It would therefore be absolutely fantastic if you would write your own plugin and make it available to all other users here via a pull request!**
+The system currently offers **9 Provider** plugins and **6 Renderer** plugins (see sections below) and more are planned. But it is definitely open for new plugins from the community. **It would therefore be absolutely fantastic if you would write your own plugin and make it available to all other users here via a pull request!**
 
 <p align="center"><img src="_attachments/divider.png" width="auto"></p>
 
@@ -130,6 +130,7 @@ The following Provider plugins are currently available:
 * [Lemmy](#provider-lemmy)
 * [Peertube](#provider-peertube)
 * [DEV.to](#provider-devto)
+* [Bubbles](#provider-bubbles)
 
 ---
 
@@ -528,6 +529,49 @@ Unfortunately, the reactions such as *Like*, *Unicorn*, *Exploding Head*, *Raise
 ```js
 mentionsUnited.register(new MentionsUnitedProvider_DevTo({
   syndicationUrl: "__DEVTO-URL__"
+}));
+```
+
+<p align="center"><img src="_attachments/divider.png" width="auto"></p>
+
+### Provider: Bubbles
+
+*File: [mentions-united-provider_bubbles.js](https://github.com/kristofzerbe/Mentions-United/blob/main/mentions-united-provider_bubbles.js)*  
+*Author: [Kristof Zerbe](https://github.com/kristofzerbe)*  
+
+[Bubbles](https://bubbles.town) is a blog aggregator that pulls content from thousands of independent blogs via RSS feeds and show them as entries. Users can vote on a post and interact with it through an automatic created syndication on Bubbles own GoToSocial instance. This plugin pulls both the votes and all other interactions onto your own website via Mentions United.
+
+![Architecture Bubbles](_attachments/Provider-bubbles.png)
+
+#### Specials
+
+As the GoToSocial API is Mastodon-compatible, it has, beside the one for the votes, a total of three API endpoints via which interactions have to be requested: *Favoured* (Likes), *Reblogged* (Boosts) and *Context* for replies. These are called up concurrently and then merged.
+
+#### Options
+
+|                      | Type   | Description |
+| -------------------- | ------ | ----------- |
+| **syndicationUrl**   | String | Full URL of the Bubbles entry |
+
+#### Supported Origins
+
+- bubbles
+
+#### Supported Type Verbs
+
+- like
+- repost
+- reply
+
+#### Initialization
+
+```html
+<script src="/js/mentions-united-provider_bubbles.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedProvider_Bubbles({
+  syndicationUrl: "__BUBBLES-ENTRY-URL__"
 }));
 ```
 

@@ -159,7 +159,7 @@ class MentionsUnitedProvider_Mastodon extends MentionsUnited.Provider {
     r.author.avatar = (type === "reply") ? entry.account.avatar : entry.avatar;
     r.author.profile = (type === "reply") ? entry.account.url : entry.url;
 
-    r.content.text = entry.content;
+    r.content.html = entry.content;
     
     return r;
   }
