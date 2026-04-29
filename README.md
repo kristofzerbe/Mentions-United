@@ -616,6 +616,23 @@ This plugin creates an inline list of avatars of a specific interaction type. It
 | **typeVerb**      | String   | Type verb for filtering the interactions and to show as avatars |
 | \[afterRender\]   | Callback | Function to call after the generated HTML was inserted into the page |
 
+### Initialization
+
+```html
+<script src="/js/mentions-united-renderer_avatars-by-type.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedRenderer_AvatarsByType({
+  placeholderId: "__ELEMENT-ID__",
+  typeVerb: "like"
+}));
+mentionsUnited.register(new MentionsUnitedRenderer_AvatarsByType({
+  placeholderId: "__ELEMENT-ID__",
+  typeVerb: "repost"
+}));
+```
+
 #### Rendered HTML
 
 ```html
@@ -650,6 +667,18 @@ The ``skipTypes`` option can be used to filter out unwanted interactions by type
 | ----------------- | ------ | ----------- |
 | **placeholderId** | String | ID of the element which will be replaced by the generated HTML |
 | \[skipTypes\]     | String | Comma-separated list of type-verbs to skip |
+
+### Initialization
+
+```html
+<script src="/js/mentions-united-renderer_list.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedRenderer_List({
+  placeholderId: "__ELEMENT-ID__"
+}));
+```
 
 #### Rendered HTML
 
@@ -695,6 +724,19 @@ This plugin renders the interactions the same as **List** do, but in groups for 
 | **placeholderId** | String | ID of the element which will be replaced by the generated HTML |
 | \[skipTypes\]     | String | Comma-separated list of type-verbs to skip |
 
+### Initialization
+
+```html
+<script src="/js/mentions-united-renderer_grouplist-by-origin.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedRenderer_GroupListByOrigin({
+  placeholderId: "__ELEMENT-ID__",
+  skipTypes: "like,repost"
+}));
+```
+
 #### Rendered HTML
 
 ```html
@@ -735,6 +777,21 @@ By specifying a ``pageKey`` in the options, the total number can be temporarily 
 | \[anchorTargetId\] | String   | ID of the element to jump to on click for rendering as anchor |
 | \[afterRender\]    | Callback | Function to call after the generated HTML was inserted into the page |
 
+### Initialization
+
+```html
+<script src="/js/mentions-united-renderer_total-number.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedRenderer_TotalNumber({
+  placeholderId: "__ELEMENT-ID__",
+  pageKey: "__SLUG__",
+  anchorTargetId: "__TARGETELEMENT-ID__",
+  afterRender: () => { // do something, if needed }
+}));
+```
+
 #### Rendered HTML
 
 ```html
@@ -763,6 +820,19 @@ This plugin creates a paragraph with information about the interactions retrieve
 | ------------------ | -------- | ----------- |
 | **placeholderId**  | String   | ID of the element which will be replaced by the generated HTML |
 | \[afterRender\]    | Callback | Function to call after the generated HTML was inserted into the page |
+
+### Initialization
+
+```html
+<script src="/js/mentions-united-renderer_summary-line.js"></script>
+```
+
+```js
+mentionsUnited.register(new MentionsUnitedRenderer_SummaryLine({
+  placeholderId: "__ELEMENT-ID__",
+  afterRender: () => { // do something, if needed }
+}));
+```
 
 #### Rendered HTML
 
