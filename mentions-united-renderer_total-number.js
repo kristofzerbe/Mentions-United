@@ -73,6 +73,14 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
     let html = (this.options.anchorTargetId) ? templates.anchor(data) : templates.text(data);
     let element = this.helper.createElementFromHtml(html);
 
+
+    //remove possible delta element on click
+    if (data.delta > 0) {
+      element.addEventListener("click", (e) => {
+        e.target.querySelector(".delta").remove();
+      });
+    }
+
     placeholder.replaceWith(element);
 
     //call afterRender callback, if defined
@@ -161,4 +169,5 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
  * 1.0.0 - Initial
  * 1.1.0 - Support for negative numbers and dedicated number sign
  * 1.2.0 - Changed render arguments
+ * 1.2.1 - Added remove delta on click
  */
