@@ -77,7 +77,7 @@ class MentionsUnitedRenderer_TotalNumber extends MentionsUnited.Renderer {
     //remove possible delta element on click
     if (data.delta > 0) {
       element.addEventListener("click", (e) => {
-        e.target.querySelector(".delta").remove();
+        element.querySelector(".delta").remove();
       });
     }
 
