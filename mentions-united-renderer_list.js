@@ -253,23 +253,27 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
      * @returns 
      */
     #part_avatar(ia) {
+      const profile = this.helper.escapeHtml(ia.author.profile);
+      const avatar = this.helper.escapeHtml(ia.author.avatar);
+      const name = this.helper.escapeHtml(ia.author.name);
+
       if (ia.author.profile) {
         return this.helper.fillLiteralTemplate(
           `
-          <a class="avatar" href="${ia.author.profile}">
-            <img src="${ia.author.avatar}" alt="${ia.author.name}" width="16px" height="16px" />
+          <a class="avatar" href="${profile}">
+            <img src="${avatar}" alt="${name}" width="16px" height="16px" />
           </a>
           `,
-          ia
+          { profile, avatar, name }
         );  
       } else {
         return this.helper.fillLiteralTemplate(
           `
           <span class="avatar">
-            <img src="${ia.author.avatar}" alt="${ia.author.name}" width="16px" height="16px" />
+            <img src="${avatar}" alt="${name}" width="16px" height="16px" />
           </span>
           `,
-          ia
+          { avatar, name }
         );
       }
     }
@@ -279,29 +283,31 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
      * @param {MentionsUnited.Interaction} ia 
      */
     #part_author(ia) {
-      let authorName = ia.author.name; 
+      let authorName = this.helper.escapeHtml(ia.author.name); 
+      const profile = this.helper.escapeHtml(ia.author.profile);
 
       //replace emoji codes with img elements
       if (ia.author.emojis?.length > 0) {
         for (const emoji of ia.author.emojis) {
-          const e = `<img class="emoji" src="${emoji.url}" alt="${emoji.code}" />`;
-          authorName = authorName.replace(":" + emoji.code + ":", e);
+          const code = this.helper.escapeHtml(emoji.code);
+          const e = `<img class="emoji" src="${this.helper.escapeHtml(emoji.url)}" alt="${code}" />`;
+          authorName = authorName.replace(":" + code + ":", e);
         }
       }
 
       if (ia.author.profile) {
         return this.helper.fillLiteralTemplate(
           `
-          <a class="author" href="${ia.author.profile}">${authorName}</a>
+          <a class="author" href="${profile}">${authorName}</a>
           `,
-          ia
+          { profile, authorName }
         );  
       } else {
         return this.helper.fillLiteralTemplate(
           `
           <span class="author">${authorName}</span>
           `,
-          ia
+          { authorName }
         );
       }
     }
@@ -362,11 +368,12 @@ class MentionsUnitedRenderer_List extends MentionsUnited.Renderer {
      * @param {MentionsUnited.Interaction} ia 
      */
     #part_content_html(ia) {
+      const html = this.helper.sanitizeHtml(ia.content.html);
       return this.helper.fillLiteralTemplate(
         `
-        <div class="content">${ia.content.html}</div>
+        <div class="content">${html}</div>
         `,
-        ia
+        { html }
       );  
     }
 
