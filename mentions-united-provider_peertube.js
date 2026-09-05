@@ -2,7 +2,7 @@
  * Mentions United Provider plugin class for retreiving interactions from Peertube
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * 
  * API Documentation: https://docs.joinpeertube.org/api-rest-reference.html
@@ -52,24 +52,27 @@ class MentionsUnitedProvider_Peertube extends MentionsUnited.Provider {
     const msg = `${this.constructor.name}: Retreiving interactions for '${this.options.syndicationUrl}'`;
     args.fStart(msg);
     
-    const apiResponse = await fetch(this.commentApiUrl());
-    const apiData = await apiResponse.json();
+    let interactions = [];
+    try {
+      const apiResponse = await fetch(this.commentApiUrl());
+      const apiData = await apiResponse.json();
 
-    //Replace AUTHOR block with data from account API in all interactions
-    let authorApiUrls = new Set();
-    apiData.items.forEach((item) => {
-      item.author.name = item.author.url.split("/").pop();
-      authorApiUrls.add(this.accountApiUrl(item.author.name));
-    });
-    let authors = await this.#fetchAuthors([...authorApiUrls]);
-    apiData.items.forEach((item) => {
-      item.author = authors.find(author => author.name === item.author.name);
-    });
+      //Replace AUTHOR block with data from account API in all interactions
+      let authorApiUrls = new Set();
+      apiData.items.forEach((item) => {
+        item.author.name = item.author.url.split("/").pop();
+        authorApiUrls.add(this.accountApiUrl(item.author.name));
+      });
+      let authors = await this.#fetchAuthors([...authorApiUrls]);
+      apiData.items.forEach((item) => {
+        item.author = authors.find(author => author.name === item.author.name);
+      });
 
-    let interactions = this.#processJsonData(apiData.items);
+      interactions = this.#processJsonData(apiData.items);
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
-    args.fCount();
-    
     args.fEnd(msg);
     return interactions;
 
@@ -145,4 +148,5 @@ class MentionsUnitedProvider_Peertube extends MentionsUnited.Provider {
  * Changelog
  * 
  * 1.0.0 - Initial
+ * 1.0.1 - Improved error handling
  */

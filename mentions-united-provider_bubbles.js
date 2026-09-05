@@ -5,7 +5,7 @@
  * GoToSocial instance. This plugin retrieves both types of interactions.
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * 
  * API Documentation: https://bubbles.town/api
@@ -178,4 +178,5 @@ class MentionsUnitedProvider_Bubbles extends MentionsUnited.Provider {
  * Changelog
  * 
  * 1.0.0 - Initial
+ * 1.0.1 - Improved error handling
  */

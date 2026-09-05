@@ -1,8 +1,8 @@
 /**
- * Mentions United Provider plugin class for retreiving comments from GitHub Issues
+ * Sample for a Mentions United Provider plugin class for retreiving comments from GitHub Issues
  * 
  * @author Kristof Zerbe
- * @version 1.0.0
+ * @version 1.0.1
  * @see {@link https://github.com/kristofzerbe/MentionsUnited|GitHub} 
  * 
  * API Documentation: https://docs.github.com/en/graphql
@@ -87,12 +87,15 @@ class MentionsUnitedProvider_GitHub extends MentionsUnited.Provider {
       fetchOptions.headers.Authorization = `Bearer ${this.options.apiTokenReadOnly}`;
     }
     
-    const apiResponse = await fetch(this.graphApiUrl(), fetchOptions);
-    const apiData = await apiResponse.json();
-    this.issue = apiData.data.repository.issue;
-    let interactions = this.#processJsonData(this.issue.comments.nodes);
-
-    args.fCount();
+    let interactions = [];
+    try {
+      const apiResponse = await fetch(this.graphApiUrl(), fetchOptions);
+      const apiData = await apiResponse.json();
+      this.issue = apiData.data.repository.issue;
+      interactions = this.#processJsonData(this.issue.comments.nodes);  
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
     
     args.fEnd(msg);
     return interactions;
@@ -181,4 +184,5 @@ class MentionsUnitedProvider_GitHub extends MentionsUnited.Provider {
  * Changelog
  * 
  * 1.0.0 - Initial
+ * 1.0.1 - Improved error handling
  */

@@ -58,12 +58,14 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
     const msg = `${this.constructor.name}: Retreiving webmentions for '${this.options.originalUrl}'`;
     args.fStart(msg);
 
-    const apiResponse = await fetch(this.webmentionApiUrl());
-    const apiData = await apiResponse.json();
-
-    let interactions = this.#processJsonData(apiData.children);
-
-    args.fCount();
+    let interactions = [];
+    try {
+      const apiResponse = await fetch(this.webmentionApiUrl());
+      const apiData = await apiResponse.json();
+      interactions = this.#processJsonData(apiData.children);
+    } 
+    catch (e) { console.error(e); }
+    finally { args.fCount(); }
 
     //filter out origins by option
     if (this.options.skipOrigins.length > 0) {
@@ -241,5 +243,5 @@ class MentionsUnitedProvider_Webmentions extends MentionsUnited.Provider {
  * 2.2.0 - Introducing new optional option 'skipOrigins' to filter out interactions, 
  *         which are retrieved by a native Provider for example
  * 2.3.0 - Added args.fCount() to count request
- * 2.3.1 - Fix for missing trailing slash in originalUrl
+ * 2.3.1 - Improved error handling
  */
