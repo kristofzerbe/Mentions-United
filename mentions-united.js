@@ -297,6 +297,36 @@ class MentionsUnited {
     }
 
     /**
+     * Escapes text for safe insertion as HTML content or attribute value
+     * @param {String} text 
+     * @returns {String}
+     */
+    escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text ?? "";
+      return div.innerHTML;
+    }
+
+    /**
+     * Sanitizes untrusted HTML by removing script-capable elements and attributes
+     * @param {String} html 
+     * @returns {String}
+     */
+    sanitizeHtml(html) {
+      const template = document.createElement("template");
+      template.innerHTML = html ?? "";
+      template.content.querySelectorAll("script, style, iframe, object, embed").forEach((el) => el.remove());
+      template.content.querySelectorAll("*").forEach((el) => {
+        for (const attr of [...el.attributes]) {
+          const isEventHandler = /^on/i.test(attr.name);
+          const isUnsafeUrl = ["href", "src"].includes(attr.name.toLowerCase()) && /^\s*javascript:/i.test(attr.value);
+          if (isEventHandler || isUnsafeUrl) { el.removeAttribute(attr.name); }
+        }
+      });
+      return template.innerHTML;
+    }
+
+    /**
      * Count attributes of given object by name which includes namePart
      * @param {Object} obj 
      * @param {String} namePart 
